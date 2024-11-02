@@ -23,6 +23,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::middleware(['admin'])->group(function () {
         Route::prefix('products')->group(function() {
            Route::post('/add',[ProductController::class,'addProduct']);
+           Route::post('/edit',[ProductController::class,'editProduct']);
         });
     });
 });

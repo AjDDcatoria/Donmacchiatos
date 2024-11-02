@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * @method static create(array $array)
+ * @method create(array $array)
+ * @method updateOrCreate(array $array, array $array1)
  */
 class Product extends Model
 {

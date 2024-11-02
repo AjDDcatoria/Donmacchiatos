@@ -101,7 +101,7 @@ const handleOrder = async () => {
                 class="h-[16rem] sm:h-[12rem] overflow-hidden product-header"
               >
                 <img
-                  :src="product.image_url"
+                  :src="product.image_url as string"
                   class="object-cover h-full w-full"
                 />
               </div>

@@ -3,8 +3,8 @@ import type { ProductCartTypes, ProductsTypes } from '@/types/ProductTypes'
 
 export const useProductStore = defineStore('products', {
   state: () => ({
-    products: [] as ProductsTypes[] | undefined,
-    cart: [] as ProductCartTypes[] | undefined,
+    products: [] as ProductsTypes[],
+    cart: [] as ProductCartTypes[],
   }),
 
   actions: {
@@ -13,21 +13,21 @@ export const useProductStore = defineStore('products', {
     },
 
     getProducts(): ProductsTypes[] {
-      return this.products || []
+      return this.products
     },
 
     addProducts(product: ProductsTypes) {
-      if (!this.products) {
-        this.products = []
-      }
       this.products.unshift(product)
     },
 
-    addToCart(product: ProductCartTypes) {
-      if (!this.cart) {
-        this.cart = []
+    editProduct(newProduct: ProductsTypes): void {
+      const index = this.products.findIndex(p => p.id === newProduct.id)
+      if (index !== -1) {
+        this.products[index] = { ...this.products[index], ...newProduct }
       }
+    },
 
+    addToCart(product: ProductCartTypes) {
       const existed = this.cart?.some(item => item.id == product.id)
 
       if (!existed) {
@@ -37,7 +37,7 @@ export const useProductStore = defineStore('products', {
     },
 
     getCart(): ProductCartTypes[] {
-      return this.cart || []
+      return this.cart
     },
 
     updateQuantity(id: string, operation: '-' | '+') {
@@ -57,7 +57,7 @@ export const useProductStore = defineStore('products', {
     },
 
     getCartSize(): number {
-      return this.cart?.length || 0
+      return this.cart?.length
     },
 
     getTotalPrice(): string {
@@ -73,7 +73,7 @@ export const useProductStore = defineStore('products', {
     },
 
     clearCart(): void {
-      this.cart = undefined
+      this.cart = []
     },
   },
 })

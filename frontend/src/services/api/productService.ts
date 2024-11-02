@@ -1,5 +1,6 @@
 import api from '@/lib/axios'
 import type { FormOrderTypes, ProductInputsTypes } from '@/types/inputs'
+import type { ProductsTypes } from '@/types/ProductTypes'
 
 export const getAllProducts = async () => {
   try {
@@ -35,6 +36,24 @@ export const addProducts = async (product: ProductInputsTypes) => {
 
     return {
       payload: productPayload,
+      error: null,
+    }
+  } catch (error) {
+    return {
+      payload: null,
+      error: error,
+    }
+  }
+}
+
+export const editProduct = async (formData: ProductsTypes) => {
+  try {
+    const response = await api.post('/products/edit', formData, {
+      headers: { 'Content-type': 'multipart/form-data' },
+    })
+
+    return {
+      payload: response.data,
       error: null,
     }
   } catch (error) {

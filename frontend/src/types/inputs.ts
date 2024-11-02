@@ -8,7 +8,7 @@ export interface VerificationTypes {
 
 export interface ProductInputsTypes {
   id?: string
-  image: File | null
+  image?: File | null
   name: string
   price: number
 }

@@ -18,7 +18,7 @@ const props = defineProps<{ class?: string }>()
         <div class="h-full">
           <div class="h-[6rem] w-[7rem] overflow-hidden rounded-md">
             <img
-              :src="cart.image_url"
+              :src="cart.image_url as string"
               class="object-cover h-full w-full"
               alt="coffee png"
             />
@@ -29,14 +29,11 @@ const props = defineProps<{ class?: string }>()
             <div class="text-lg font-bold leading-5">
               {{ cart.name }} <br />
             </div>
-            <p class="font-semibold text-green-600 hidden sm:block">
+            <p class="font-semibold text-green-600 !block sm:hidden">
               ₱{{ cart.price.toFixed(2) }}
             </p>
           </div>
-          <div class="flex justify-between">
-            <p class="font-semibold text-green-600 block sm:hidden">
-              ₱{{ cart.price.toFixed(2) }}
-            </p>
+          <div class="flex justify-center">
             <div class="flex gap-3">
               <Button
                 label="-"
