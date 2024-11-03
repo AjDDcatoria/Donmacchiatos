@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\OrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/products/getAll',[ProductController::class,'getAllProducts']);
@@ -16,7 +17,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     // Orders routes.
     Route::prefix('order')->group(function () {
-        Route::post('/create',[ProductController::class,'createOrder']);
+        Route::post('/create',[OrderController::class,'create']);
     });
 
     // Admin routes.

@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class OrderRequest extends FormRequest
+class CreateOrderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,8 +27,9 @@ class OrderRequest extends FormRequest
             'cart.*.id' => ['required','string'],
             'cart.*.quantity' => 'nullable|integer|min:1',
 
+            'message' => ['sometimes','string','max:500'],
             'payment' => ['required','array'],
-            'payment.code' => ['required','string','in:COD']
+            'payment.code' => ['required','string','in:cod,gcash,other']
         ];
     }
 
@@ -38,6 +39,7 @@ class OrderRequest extends FormRequest
             'cart.required' => 'The cart cannot be empty.',
             'cart.*.id.required' => 'Each product must have an ID.',
             'cart.*.price.required' => 'Each product must have a price.',
+            'message.max' => 'Message should below 500 characters',
             'payment.required' => 'Payment information is required.',
             'payment.method.in' => 'The payment method is invalid',
             'payment.code.required' => 'The payment method is required',

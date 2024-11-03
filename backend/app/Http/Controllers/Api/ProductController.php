@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddProductRequest;
 use App\Http\Requests\EditProductRequest;
-use App\Http\Requests\OrderRequest;
 use App\Http\Resources\ProductResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -16,6 +15,7 @@ class ProductController extends Controller
     public function addProduct(AddProductRequest $request): JsonResponse
     {
         $newProduct = $request->createProduct();
+        // Todo email all user that there is a new product.
 
         return response()->json([
             'message' => 'Product added successfully!',
@@ -75,14 +75,5 @@ class ProductController extends Controller
     public function getAllProducts(): AnonymousResourceCollection
     {
         return ProductResource::collection(Product::all());
-    }
-
-    public function createOrder(OrderRequest $request): JsonResponse
-    {
-        $request->validated();
-
-        return response()->json([
-            'message' => 'Your order is successful please wait seller to respond!'
-        ],201);
     }
 }

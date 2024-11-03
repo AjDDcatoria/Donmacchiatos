@@ -6,6 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 
+/**
+ * @property mixed $id
+ * @property mixed $name
+ * @property mixed $price
+ * @property mixed $image
+ */
 class ProductResource extends JsonResource
 {
     /**
