@@ -17,6 +17,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     // Orders routes.
     Route::prefix('order')->group(function () {
+        Route::post('/',[OrderController::class,'show']);
         Route::post('/create',[OrderController::class,'create']);
     });
 

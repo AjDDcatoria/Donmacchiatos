@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Constants\Role;
 use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Collection;
 
 class OrderService
 {
@@ -116,5 +118,47 @@ class OrderService
     {
         // Find the order by ID and eager load its items relationship
         return Order::with('items')->find($id);
+    }
+
+    /**
+     * Retrieve orders filtered by status and user role.
+     *
+     * This method constructs a query to retrieve orders based on the specified `status`
+     * and the role of the user. Admin can access all orders, while customers are
+     * limited to viewing only their own orders filtered by status.
+     *
+     * @param array $filter - Associative array containing the filter parameters:
+     *    - `status` - Order status (e.g., 'pending', 'completed', 'all') to filter the results.
+     *    - `view_scope` - Specifies the user's view scope, such as `Role::ADMIN` or `Role::CUSTOMER`.
+     * @param object $user - The authenticated user object; provides `id` for customer filtering.
+     * @return Collection - Collection of orders that match the provided criteria.
+     *
+     * ### Query Logic
+     * - If `status` is set to any value other than 'all', the query filters orders by that status.
+     * - If `view_scope` is not `Role::ADMIN`, the query filters orders to include only
+     *   those belonging to the authenticated user.
+     *
+     * ### Example Usage
+     * ```php
+     * $orders = $orderService->getOrdersByStatus(['status' => 'pending', 'view_scope' => Role::CUSTOMER], $user);
+     * ```
+     */
+    public function getOrdersByStatus(array $filter,object $user): Collection
+    {
+        // Initialize the order query with user and item relationships
+        $orderQuery = Order::with(['user', 'items']);
+
+        // Filter by order status if not requesting all orders
+        if ($filter['status'] !== 'all') {
+            $orderQuery->where('status', $filter['status']);
+        }
+
+        // If the user is a customer, restrict the query to their orders only
+        if ($filter['view_scope'] !== Role::ADMIN) {
+            $orderQuery->where('user_id', $user->id);
+        }
+
+        // Execute the query and return the collection of orders
+        return $orderQuery->get();
     }
 }

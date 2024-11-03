@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @method static where(string $string, $id)
  * @method static create(array $array)
+ * @property mixed $user_id
  */
 class Order extends Model
 {

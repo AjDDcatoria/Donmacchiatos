@@ -8,6 +8,6 @@ class RoleExceptions extends Exception
 {
     public static function unAuthorized(): RoleExceptions
     {
-        return new self('Unauthorized!',401);
+        return new self('This action is unauthorized!',401);
     }
 }
