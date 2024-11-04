@@ -6,9 +6,11 @@ use App\Constants\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateOrderRequest;
 use App\Http\Requests\ShowOrderRequest;
+use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Services\OrderService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Gate;
 
@@ -82,5 +84,37 @@ class OrderController extends Controller
             'message' => 'Get ' .  $filter['status'] . ' orders successful!',
             'data' => OrderResource::collection($filtered_order)
         ]);
+    }
+
+    /**
+     * Updates the specified fields of an order.
+     *
+     * This method receives validated data from the `UpdateOrderRequest` and performs
+     * an authorization check to determine if the user has permission to update the order.
+     * If authorized, it delegates the field updates to the `updateOrderField` method in
+     * the `OrderService` service.
+     *
+     * @param UpdateOrderRequest $request The validated request containing the fields to update.
+     *
+     * @return JsonResponse A JSON response indicating the success of the operation.
+     *
+     * @throws AuthorizationException If the user is not authorized to update the order.
+     */
+    public function updateOrder(UpdateOrderRequest $request): JsonResponse
+    {
+        // Retrieve validated input data
+        $data = $request->validated();
+
+        // Fetch the order by ID
+        $order = Order::where('id',$data['order_id'])->first();
+
+        // Check if the user is authorized to update this order
+        Gate::authorize('update',$order);
+
+        // Update the specified fields in the order using the OrderService
+        $this->order_service->updateOrderField($data['update'],$order);
+
+        // Return a JSON response indicating a successful update
+        return response()->json(['message' => 'Order update successful!'],201);
     }
 }

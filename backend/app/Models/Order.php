@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static where(string $string, $id)
  * @method static create(array $array)
  * @property mixed $user_id
+ * @property mixed $status
+ * @property mixed $payment
+ * @property mixed $message
  */
 class Order extends Model
 {

@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Constants\OrderStatus;
 use App\Constants\Role;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Gate;
 
 class OrderService
 {
@@ -160,5 +162,42 @@ class OrderService
 
         // Execute the query and return the collection of orders
         return $orderQuery->get();
+    }
+
+    /**
+     * Updates specific fields of an order based on provided data.
+     *
+     * This method selectively updates the `status`, `payment`, and `message` fields
+     * of the provided `Order` model instance, based on the values in the `$data` array.
+     * Before updating the `status`, it performs an authorization check to ensure the
+     * user has permission to modify the order status.
+     *
+     * @param array $data An associative array containing fields to update (`status`, `payment`, `message`).
+     * @param Order $order The order model instance to be updated.
+     *
+     * @return void
+     */
+    public function updateOrderField(array $data,Order $order): void
+    {
+        // Update the status if provided and different from the current status
+        if (isset($data['status']) && $data['status'] !== $order->status) {
+            Gate::authorize($data['status'], $order); // Authorize based on the status
+
+            // Todo notify user if the admin set the status to Accepted or declined
+
+            $order->status = $data['status'];
+        }
+
+        // Update the payment method if provided and different from the current payment
+        if (isset($data['payment']) && $data['payment'] !== $order->payment) {
+            $order->payment = $data['payment'];
+        }
+
+        // Update the message if provided and different from the current message
+        if (isset($data['message']) && $data['message'] !== $order->message) {
+            $order->message = $data['message'];
+        }
+
+        $order->save(); // Persist changes to the database
     }
 }

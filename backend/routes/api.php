@@ -19,6 +19,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('order')->group(function () {
         Route::post('/',[OrderController::class,'show']);
         Route::post('/create',[OrderController::class,'create']);
+        Route::patch('/update',[OrderController::class,'updateOrder']);
     });
 
     // Admin routes.
