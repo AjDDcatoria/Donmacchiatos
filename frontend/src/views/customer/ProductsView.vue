@@ -28,7 +28,7 @@ const { orderProduct, errorMessage, successMessage } = useProduct()
 
 onMounted(async () => {
   const _products = productsStore.getProducts()
-
+  console.log(_products)
   if (!_products.length) {
     const { payload, error } = await getAllProducts()
 
@@ -111,7 +111,7 @@ const handleOrder = async () => {
               <div class="flex gap-2 items-enter w-full product-footer">
                 <div class="w-1/2">
                   <span class="text-lg font-bold text-green-600 product-price">
-                    ₱{{ product.price.toFixed(2) }}
+                    ₱{{ product.price }}
                   </span>
                 </div>
                 <Button

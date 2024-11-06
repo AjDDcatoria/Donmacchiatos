@@ -14,6 +14,7 @@ use App\Services\OtpService;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\JsonResponse;
 use Exception;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -77,5 +78,13 @@ class AuthController extends Controller
                         ->getTargetUrl();
 
         return response()->json(['redirect' => $url],307);
+    }
+
+    public function destroy(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $user->token()->revoke();
+
+        return response()->json(['message' => 'Logout successfully!']);
     }
 }

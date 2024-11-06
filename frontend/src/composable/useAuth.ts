@@ -1,4 +1,4 @@
-import { sendOTP, verifyOTP } from '@/services/api/otpService'
+import { logout, sendOTP, verifyOTP } from '@/services/api/authService'
 import { DefaultVerification } from '@/types/defaults'
 import type { VerificationTypes } from '@/types/inputs'
 import { AxiosError } from 'axios'
@@ -12,6 +12,7 @@ type UseAuthTypes = {
   errors: Ref<string | null>
   requestSendOTP: (resend?: boolean) => Promise<string | undefined>
   requestVerifyOTP: () => Promise<string | undefined>
+  requestLogout: () => Promise<void>
 }
 
 /**
@@ -123,9 +124,24 @@ export function useAuth(): UseAuthTypes {
     }
   }
 
+  /**
+   * Asynchronously handles the logout process by calling the `logout` function.
+   * Updates the `message` with the response payload message, if available.
+   *
+   * @returns {Promise<void>} - A promise that resolves when the logout request is complete.
+   */
+  const requestLogout = async (): Promise<void> => {
+    const { payload } = await logout()
+
+    if (payload) {
+      message.value = payload.message
+    }
+  }
+
   return {
     requestSendOTP,
     requestVerifyOTP,
+    requestLogout,
     otpSent,
     isLoading,
     formData,

@@ -27,6 +27,7 @@ import Dialog from 'primevue/dialog'
 import Select from 'primevue/select'
 import FloatLabel from 'primevue/floatlabel'
 import Textarea from 'primevue/textarea'
+import { useAuth } from '@/composable/useAuth'
 
 const router = useRouter()
 const route = useRoute()
@@ -53,13 +54,14 @@ const items = ref([
   },
 ])
 const selectPayment = ref<SelectedPaymentTypes[]>([
-  { name: 'Cash on delivery', code: 'COD' },
+  { name: 'Cash on delivery', code: 'cod' },
 ])
 
 const userStore = useUserStore()
 const productsStore = useProductStore()
 const toast = useToast()
 const { orderProduct, errorMessage, successMessage } = useProduct()
+const { requestLogout, message } = useAuth()
 
 onMounted(() => {
   // Set userRole if null set empty string.
@@ -130,6 +132,9 @@ const setHeaderStyles = (isDarkMode: boolean) => {
 
 const updateHeaderOnScroll = () => setHeaderStyles(dark_mode.value)
 
+/**
+ * Checks if there are products in the cart, and if so, opens the order confirmation dialog.
+ */
 const placeOrder = async () => {
   const productsInCart = productsStore.getCartSize()
   if (productsInCart) {
@@ -137,22 +142,32 @@ const placeOrder = async () => {
   }
 }
 
+/**
+ * Handles the order submission by creating the form data and sending it.
+ * Displays success or error notifications based on the response and resets relevant states.
+ */
 const handleOrder = async () => {
+  // Construct the form data for the order from the cart and selected options.
   const formData: FormOrderTypes = {
     cart: productsStore.getCart(),
     payment: selectedPayment.value,
     message: orderMessage.value,
   }
+
+  // Close the confirmation dialog before submitting.
   visibleDialog.value = false
 
+  // Send the order data to the `orderProduct` function.
   await orderProduct(formData)
 
+  // If there's an error message, display it in a toast notification and clear the error.
   if (errorMessage.value) {
     toast.error(errorMessage.value)
     errorMessage.value = null
     return
   }
 
+  // If the order is successful, display a success message, clear the cart, and reset order-related state.
   if (successMessage.value) {
     toast.success(successMessage.value)
     successMessage.value = null
@@ -161,6 +176,24 @@ const handleOrder = async () => {
     selectedPayment.value = undefined
     orderMessage.value = ''
     return
+  }
+}
+
+/**
+ * Logs the user out by calling the `requestLogout` function, clears the user store,
+ * and displays a logout success message if available.
+ */
+const handleLogout = async () => {
+  // Close the right-side drawer.
+  visibleRight.value = false
+
+  // Call the logout function and clear the user data from the store.
+  await requestLogout()
+  userStore.clear()
+
+  // If there's a logout success message, display it in a toast notification.
+  if (message.value) {
+    toast.success(message.value)
   }
 }
 </script>
@@ -288,7 +321,7 @@ const handleOrder = async () => {
             label="Sign out"
             class="w-full"
             icon="pi pi-sign-out"
-            @click="userStore.clear()"
+            @click="handleLogout"
           />
         </nav>
       </Drawer>

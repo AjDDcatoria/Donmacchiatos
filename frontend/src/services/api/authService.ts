@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import api from '@/lib/axios'
 import { auth } from '@/lib/constans/routes'
 import type { VerificationTypes } from '@/types/inputs'
 
 type OtpTypes = {
-  payload: PayloadResponse | null
+  payload: PayloadResponse | Record<string ,any> | null
   error: unknown
 }
 
@@ -47,6 +48,24 @@ export const verifyOTP = async (
   try {
     const { data: response } = await api.post(auth.verifyOTP, formData)
 
+    return {
+      payload: response.data,
+      error: null,
+    }
+  } catch (error) {
+    return {
+      payload: null,
+      error,
+    }
+  }
+}
+
+/**
+ * Handle logout api.
+ */
+export const logout = async ():Promise<OtpTypes> => {
+  try {
+    const response = await api.post('/authenticate/logout')
     return {
       payload: response.data,
       error: null,

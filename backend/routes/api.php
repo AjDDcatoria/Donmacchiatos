@@ -15,6 +15,8 @@ Route::middleware(['auth:api'])->group(function () {
         Route::patch('/setup',[UserController::class,'update']);
     });
 
+    Route::post('/authenticate/logout',[AuthController::class,'destroy']);
+
     // Orders routes.
     Route::prefix('order')->group(function () {
         Route::post('/',[OrderController::class,'show']);
