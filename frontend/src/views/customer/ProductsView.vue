@@ -19,28 +19,57 @@ const visibleDialog = ref<boolean>(false)
 const selectedPayment = ref<SelectedPaymentTypes>()
 const orderMessage = ref<string>('')
 const selectPayment = ref<SelectedPaymentTypes[]>([
-  { name: 'Cash on delivery', code: 'COD' },
+  { name: 'Cash on delivery', code: 'cod' },
 ])
 
 const productsStore = useProductStore()
 const toast = useToast()
 const { orderProduct, errorMessage, successMessage } = useProduct()
 
+/**
+ * The `onMounted` lifecycle hook is called when the component is first mounted to the DOM.
+ *
+ * - This function retrieves products from the `productsStore`.
+ * - If the products list is empty, it makes an asynchronous request to fetch all products.
+ * - Upon successful retrieval, the products are stored in the `productsStore`.
+ * - If an error occurs during the fetch, an error toast is displayed.
+ * - Finally, the `products` variable is updated with the fetched products.
+ */
 onMounted(async () => {
+  // Retrieve current products from the store
   const _products = productsStore.getProducts()
-  console.log(_products)
+
+  // Check if products list is empty
   if (!_products.length) {
+    // Fetch all products
     const { payload, error } = await getAllProducts()
 
     if (!error && payload && Array.isArray(payload)) {
+      // Store fetched products in the store
       productsStore.storeAllProducts(payload as ProductsTypes[])
     } else {
+      // Display error toast if fetch fails
       toast.error("Something wen't wrong!")
     }
   }
+
+  // Update products with the stored or newly fetched products
   products.value = productsStore.getProducts()
 })
 
+/**
+ * Initiates the order placement process by checking if there are items in the cart.
+ *
+ * - Retrieves the size of the cart from `productsStore`.
+ * - If there are items in the cart, it sets `visibleDialog` to `true`,
+ *   opening the order confirmation dialog for the user.
+ * - If the cart is empty, the function does nothing.
+ *
+ * @async
+ * @function placeOrder
+ * - Checks if the cart has products, then opens the order dialog if it does.
+ *
+ */
 const placeOrder = async () => {
   const productsInCart = productsStore.getCartSize()
   if (productsInCart) {
@@ -48,25 +77,48 @@ const placeOrder = async () => {
   }
 }
 
+/**
+ * Handles the order submission process, collecting form data and processing the order.
+ *
+ * - Prepares form data, including cart items, selected payment method, and any order message.
+ * - Closes the order dialog by setting `visibleDialog` to `false`.
+ * - Calls the `orderProduct` function to submit the order.
+ * - If an error message is returned, it displays an error toast and resets the error message.
+ * - If a success message is returned, it displays a success toast, clears the cart, and resets the success message.
+ *
+ * @async
+ * @function handleOrder
+ * - Manages the order submission, displaying appropriate messages based on the result.
+ */
 const handleOrder = async () => {
   const formData: FormOrderTypes = {
     cart: productsStore.getCart(),
     payment: selectedPayment.value,
     message: orderMessage.value,
   }
+
+  // Close the order dialog
   visibleDialog.value = false
 
+  // Submit the order with the form data
   await orderProduct(formData)
 
+  // Check for any error message after submission
   if (errorMessage.value) {
+    // Display error toast
     toast.error(errorMessage.value)
+    // Reset the error message
     errorMessage.value = null
     return
   }
 
+  // Check for a success message after submission
   if (successMessage.value) {
+    // Display success toast
     toast.success(successMessage.value)
+    // Reset the success message
     successMessage.value = null
+    // Clear the cart after a successf
     productsStore.clearCart()
     return
   }

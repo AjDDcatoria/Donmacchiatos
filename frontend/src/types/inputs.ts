@@ -16,5 +16,5 @@ export interface ProductInputsTypes {
 export type FormOrderTypes = {
   cart: ProductCartTypes[]
   message: string
-  payment: SelectedPaymentTypes | undefined
+  payment: SelectedPaymentTypes | string | undefined
 }

@@ -50,7 +50,7 @@ const items = ref([
   {
     label: 'Orders',
     icon: 'pi pi-shopping-bag',
-    command: () => console.log('Open Orders'),
+    command: () => router.push({ name: 'customer.orders' }),
   },
 ])
 const selectPayment = ref<SelectedPaymentTypes[]>([

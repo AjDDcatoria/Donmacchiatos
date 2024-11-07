@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia'
 import type { ProductCartTypes, ProductsTypes } from '@/types/ProductTypes'
+import type { OrderTypes } from '@/composable/useProduct'
 
 export const useProductStore = defineStore('products', {
   state: () => ({
     products: [] as ProductsTypes[],
     cart: [] as ProductCartTypes[],
+    orders: [] as OrderTypes[],
   }),
 
   actions: {
@@ -70,6 +72,18 @@ export const useProductStore = defineStore('products', {
       })
 
       return total.toFixed(2)
+    },
+
+    setOrders(orders: OrderTypes[]): void {
+      this.orders = orders
+    },
+
+    getOrders(): OrderTypes[] {
+      return this.orders
+    },
+
+    getOrderSize(): number {
+      return this.orders.length
     },
 
     clearCart(): void {

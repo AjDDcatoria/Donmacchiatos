@@ -129,13 +129,13 @@ const changeEmailOtp = (): void => {
         <Button
           label="Facebook"
           severity="secondary"
-          class="w-1/2 !bg-white shadow"
+          class="w-1/2 !bg-white shadow !text-gray-800"
           :disabled="isLoading"
         />
         <Button
           label="Google"
           severity="secondary"
-          class="w-1/2 !bg-white shadow"
+          class="w-1/2 !bg-white shadow !text-gray-800"
           :disabled="isLoading"
         />
       </div>

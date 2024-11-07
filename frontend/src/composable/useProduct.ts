@@ -1,4 +1,8 @@
-import { createOrder, editProduct } from '@/services/api/productService'
+import {
+  createOrder,
+  editProduct,
+  getOrders,
+} from '@/services/api/productService'
 import { useProductStore } from '@/stores/productStore'
 import type { FormOrderTypes } from '@/types/inputs'
 import type { ProductsTypes } from '@/types/ProductTypes'
@@ -8,8 +12,32 @@ import { ref, type Ref } from 'vue'
 type UseProductTypes = {
   orderProduct: (formData: FormOrderTypes) => Promise<void>
   updateProduct: (formData: ProductsTypes) => Promise<void>
+  fetchOrder: (view_scope: string, filter: string) => Promise<void>
   errorMessage: Ref<string | null>
   successMessage: Ref<string | null>
+}
+
+export type OrderTypes = {
+  order_id: string
+  grand_total: string
+  message: string | null
+  payment: 'cod' | 'cash' | 'gcash'
+  status: 'pending' | 'accepted' | 'declined' | 'canceled'
+  user: {
+    avatar: string | null
+    email: string
+    id: string
+    name: string
+  }
+  order_items: OrderItems[]
+}
+
+type OrderItems = {
+  id: number
+  order_id: string
+  product: ProductsTypes
+  quantity: number
+  total_price: string
 }
 
 // The `useProduct` composable provides methods and reactive states to manage product-related operations
@@ -89,6 +117,31 @@ export function useProduct(): UseProductTypes {
       successMessage.value = payload.message // Assign success message from payload
     }
   }
+
+  /**
+   * Fetches a list of orders based on the specified view scope and filter,
+   * and updates the order data in the product store.
+   *
+   * @param {string} view_scope - Defines the scope of the view ('customer' or 'admin') to determine whose orders to fetch.
+   * @param {string} filter - Specifies a filter to apply to the fetched orders (e.g., 'all', 'pending', 'success').
+   * @returns {Promise<void>} - A promise that resolves when the order data is successfully fetched and stored.
+   */
+  const fetchOrder = async (
+    view_scope: string,
+    filter: string,
+  ): Promise<void> => {
+    const { payload } = await getOrders(view_scope, filter)
+    if (payload) {
+      productStore.setOrders(payload.data)
+    }
+  }
+
   // Return the composable's methods and reactive variables for use in components
-  return { orderProduct, errorMessage, successMessage, updateProduct }
+  return {
+    orderProduct,
+    errorMessage,
+    successMessage,
+    updateProduct,
+    fetchOrder,
+  }
 }

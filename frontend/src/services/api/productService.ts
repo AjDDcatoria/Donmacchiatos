@@ -78,3 +78,20 @@ export const createOrder = async (formData: FormOrderTypes) => {
     }
   }
 }
+
+export const getOrders = async (role: string, filter: string) => {
+  try {
+    const { data: response } = await api.post(
+      `/order?view_scope=${role}&status=${filter}`,
+    )
+    return {
+      payload: response,
+      error: null,
+    }
+  } catch (error) {
+    return {
+      error: error,
+      payload: null,
+    }
+  }
+}

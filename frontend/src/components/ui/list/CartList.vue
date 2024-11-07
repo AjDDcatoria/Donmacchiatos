@@ -30,7 +30,7 @@ const props = defineProps<{ class?: string }>()
               {{ cart.name }} <br />
             </div>
             <p class="font-semibold text-green-600 !block sm:hidden">
-              ₱{{ cart.price.toFixed(2) }}
+              ₱{{ cart.price }}
             </p>
           </div>
           <div class="flex justify-center">

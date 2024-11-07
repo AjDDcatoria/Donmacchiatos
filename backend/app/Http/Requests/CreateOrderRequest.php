@@ -27,7 +27,6 @@ class CreateOrderRequest extends FormRequest
             'cart.*.id' => ['required','string'],
             'cart.*.quantity' => 'nullable|integer|min:1',
 
-            'message' => ['sometimes','string','max:500'],
             'payment' => ['required','array'],
             'payment.code' => ['required','string','in:cod,gcash,other']
         ];
