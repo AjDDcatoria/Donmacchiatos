@@ -8,20 +8,20 @@ export const customerNavigations: NavigationTypes[] = [
     badge: null,
     severity: null,
   },
-  {
-    icon: 'pi-envelope',
-    label: 'Message',
-    path: 'customer.message',
-    badge: 0,
-    severity: null,
-  },
-  {
-    icon: 'pi-shopping-cart',
-    label: 'Cart',
-    path: 'customer.cart',
-    badge: 0,
-    severity: 'info',
-  },
+  // {
+  //   icon: 'pi-envelope',
+  //   label: 'Message',
+  //   path: 'customer.message',
+  //   badge: 0,
+  //   severity: null,
+  // },
+  // {
+  //   icon: 'pi-shopping-cart',
+  //   label: 'Cart',
+  //   path: 'customer.cart',
+  //   badge: 0,
+  //   severity: 'info',
+  // },
   {
     icon: 'pi-shopping-bag',
     label: 'Orders',
@@ -33,8 +33,8 @@ export const customerNavigations: NavigationTypes[] = [
 
 export const adminNavigations: NavigationTypes[] = [
   { icon: 'pi pi-objects-column', label: 'Dashboard', path: 'admin.dashboard' },
-  { icon: 'pi pi-cart-plus', label: 'Orders', path: 'admin.manageUser' },
-  { icon: 'pi pi-inbox', label: 'Messages', path: 'admin.messages' },
+  { icon: 'pi pi-cart-plus', label: 'Orders', path: 'admin.ordes' },
+  // { icon: 'pi pi-inbox', label: 'Messages', path: 'admin.messages' },
   { icon: 'pi pi-shopping-bag', label: 'Products', path: 'admin.products' },
   { icon: 'pi pi-users', label: 'Users', path: 'admin.manageUser' },
 ]
